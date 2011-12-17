@@ -1,0 +1,97 @@
+#!/usr/bin/env ruby
+$LOAD_PATH << './lib'
+require 'curses'
+require 'gamename'
+
+MIN_WIDTH  = 80
+MIN_HEIGHT = 40
+
+# Writes a character at y, x
+def putch(window, row, column, char)
+  window.setpos(row, column)
+  window.addch(char)
+end
+
+# Writes a string at y, x
+def putstr(window, row, column, string)
+  window.setpos(row, column)
+  window.addstr(string)
+end
+
+def init_screen
+  Curses.noecho
+  Curses.init_screen
+  Curses.stdscr.keypad(1)
+  Curses.curs_set(0)
+
+  while Curses.cols < MIN_WIDTH or Curses.lines < MIN_HEIGHT
+    # fffffuuuuuuuuuuu line length > 80
+    putstr(Curses.stdscr, 3, 5, 
+           "Please adjust your console to at least #{MIN_WIDTH}x#{MIN_HEIGHT}")
+    Curses.stdscr.refresh
+  end
+
+  game_win = Curses.stdscr.subwin(Curses.lines - 2, Curses.cols - 20, 
+                                  0, 0)
+
+  hud_win = Curses.stdscr.subwin(Curses.lines - 2, 20, 
+                                 0, Curses.cols - 20)
+
+  begin
+    yield game_win, hud_win
+  ensure
+    game_win.close
+    hud_win.close
+    Curses.close_screen
+  end
+end
+
+def render_game(win, game)
+  half_width  = (win.maxx / 2).round
+  half_height = (win.maxy / 2).round
+  center      = game.view_position
+
+  i = 0 # cols
+  j = 0 # rows
+  ((center.x - half_width)..(center.x + half_width)).each do |x|
+    ((center.y - half_height)..(center.y + half_height)).each do |y|
+      tile = game.dungeon.tile_at(GameName::Point.new(x, y))
+      if tile
+        symbol = tile.symbol
+      else
+        symbol = '?' # this is bad
+      end
+      putch(win, j, i, symbol)
+
+      j += 1
+    end
+
+    i += 1
+    j = 0
+  end
+
+  putch(win, half_height, half_width, game.player.symbol)
+
+  win.noutrefresh
+end
+
+def render_hud(win, game)
+  putstr(win, 1, 1, "Turn: #{game.turn}")
+
+  win.noutrefresh
+end
+
+init_screen do |game_win, hud_win|
+  game = GameName.new
+  game.generate_dungeon(100, 100, 2)
+
+  while game.running?
+    render_game(game_win, game)
+    render_hud(hud_win, game)
+    Curses.refresh
+
+    game.handle_input(Curses.getch)
+    game.think
+  end
+end
+
