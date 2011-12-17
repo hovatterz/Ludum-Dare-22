@@ -31,6 +31,7 @@ def init_screen
   Curses.init_pair(3, Curses::COLOR_BLUE,    Curses::COLOR_BLACK)
   Curses.init_pair(4, Curses::COLOR_YELLOW,  Curses::COLOR_BLACK)
   Curses.init_pair(5, Curses::COLOR_RED,     Curses::COLOR_BLACK)
+  Curses.init_pair(6, Curses::COLOR_GREEN,   Curses::COLOR_BLACK)
 
   while Curses.cols < MIN_WIDTH or Curses.lines < MIN_HEIGHT
     # fffffuuuuuuuuuuu line length > 80
@@ -85,6 +86,7 @@ def render_game(win, game)
     j = 0
   end
   
+  win.color_set(6)
   putch(win, half_height, half_width, game.player.symbol)
 
   win.noutrefresh
