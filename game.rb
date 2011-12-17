@@ -85,12 +85,24 @@ end
 
 init_screen do
   player = Player.new
+  
+  game_running = true
+  while game_running do
+    #insert drawing here
+    
+    turn_taken = false
+    until turn_taken
+      input = Curses.getch
 
-  loop do
-    input = Curses.getch
-    case input
-    when ?q then break # quit game  
-    else player.take_turn(input) # player takes turn
+      case input
+      when ?Q then # quit game
+        game_running = false
+        turn_taken = true
+      else 
+        turn_taken = true if player.take_turn(input) # player takes turn
+      end
     end
+
+    #insert logic here
   end
 end
