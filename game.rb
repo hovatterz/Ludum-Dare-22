@@ -86,14 +86,25 @@ class Dungeon
 end
 
 class Creature
-  attr_reader :health, :symbol
+  attr_reader :health, :position, :symbol
 
   def initialize(hitDie='1d6', symbol='?')
     @health = RNG.roll(hitDie)
     @symbol = symbol
+    @position = Point.new
+  end
+  
+  # Offsets the creture by point
+  def move(point)
+    @position += point
   end
 
   def take_turn
+  end
+
+  # Moves the creature to point
+  def teleport(point)
+    @position = point
   end
 end
 
@@ -151,24 +162,42 @@ def init_screen
   end
 end
 
-def render_game(game_win)
-  #TODO: be player-centric
-  DUNGEON_WIDTH.times do |x|
-    DUNGEON_HEIGHT.times do |y|
-      putch(game_win, y, x, dungeon.tile_at(x, y).symbol)
+def render_game(game_win, player, dungeon)
+  half_win_width  = (game_win.maxx / 2).round
+  half_win_height = (game_win.maxy / 2).round
+  center          = player.position
+
+  i = 0 # cols
+  j = 0 # rows
+  ((center.x - half_win_width)..(center.x + half_win_width)).each do |x|
+    ((center.y - half_win_height)..(center.y + half_win_height)).each do |y|
+      tile = dungeon.tile_at(x, y)
+      symbol = (tile == nil) ? '?' : tile.symbol
+      putch(game_win, j, i, symbol)
+
+      j += 1
     end
+
+    i += 1
+    j = 0
   end
+
+  putch(game_win, half_win_height, half_win_width, player.symbol)
 
   game_win.noutrefresh
 end
 
-def render_hud(hud_win)
+def render_hud(hud_win, turn)
   putstr(hud_win, 1, 1, "Turn: #{turn}")
 
   hud_win.noutrefresh
 end
 
 init_screen do |screen_width, screen_height|
+  DUNGEON_WIDTH  = 10
+  DUNGEON_HEIGHT = 10
+  DUNGEON_FLOORS = 2
+
   # TODO: figure out if i should close these
   game_win = Curses.stdscr.subwin(screen_height - 2, screen_width - 20, 
                                   0, 0)
@@ -176,18 +205,16 @@ init_screen do |screen_width, screen_height|
   hud_win = Curses.stdscr.subwin(screen_height - 2, 20, 
                                     0, screen_width - 20)
 
-  DUNGEON_WIDTH  = 100
-  DUNGEON_HEIGHT = 100
-  DUNGEON_FLOORS = 2
-
   player = Player.new
+  player.teleport(Point.new(5, 5))
+
   dungeon = Dungeon.new(DUNGEON_WIDTH, DUNGEON_HEIGHT, DUNGEON_FLOORS)
   
   game_running = true
   turn = 1
   while game_running do
-    render_game(game_win)
-    render_hud(hud_win)
+    render_game(game_win, player, dungeon)
+    render_hud(hud_win, turn)
     Curses.refresh
     
     turn_taken = false
