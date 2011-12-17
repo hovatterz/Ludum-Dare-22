@@ -6,6 +6,10 @@ class GameName
         @symbol = '@'
         @name = 'Player'
       end
+
+      def name
+        @name
+      end
     
       # handles the players turn
       def take_turn(key)
