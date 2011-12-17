@@ -8,6 +8,7 @@ class GameName
       attr_reader :player_start, :creatures
 
       def initialize(dungeon, width, height)
+        @dungeon = dungeon
         @width = width
         @height = height
 
