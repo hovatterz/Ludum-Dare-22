@@ -128,20 +128,30 @@ def putstr(window, row, column, string)
   window.addstr(string)
 end
 
+MIN_WIDTH  = 80
+MIN_HEIGHT = 40
+
 def init_screen
   Curses.init_screen
   Curses.noecho
   Curses.stdscr.keypad(1)
   Curses.curs_set(0)
 
+  while Curses.cols < MIN_WIDTH or Curses.lines < MIN_HEIGHT
+    # fffffuuuuuuuuuuu line length > 80
+    putstr(Curses.stdscr, 3, 5, 
+           "Please adjust your console to at least #{MIN_WIDTH}x#{MIN_HEIGHT}")
+    Curses.stdscr.refresh
+  end
+
   begin
-    yield
+    yield(Curses.cols, Curses.lines)
   ensure
     Curses.close_screen
   end
 end
 
-init_screen do
+init_screen do |screen_width, screen_height|
   DUNGEON_WIDTH  = 100
   DUNGEON_HEIGHT = 100
   DUNGEON_FLOORS = 2
