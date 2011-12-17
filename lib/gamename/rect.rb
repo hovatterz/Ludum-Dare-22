@@ -12,6 +12,11 @@ class GameName
     def center
       GameName::Point.new((@x + @x2) / 2, (@y + @y2) / 2)
     end
+
+    def contains?(point)
+      point.x <= @x2 and point.x >= @x and
+      point.y <= @y2 and point.y >= @y
+    end
   
     def intersects?(other)
       @x <= other.x + other.x2 and @x2 >= other.x and
