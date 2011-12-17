@@ -46,15 +46,28 @@ class Player < Creature
 
   def take_turn(key)
     case key
-      case ?. then break # skip turn
-      end
+    when ?. then return true
     end
   end
 end
 
 # TODO: Need to think of better enemies
 class Goblin < Creature
+  def initialize
+    super('1d6')
+  end
+end
 
+# Writes a character at y, x
+def putch(window, row, column, char)
+  window.setpos(row, column)
+  window.addch(char)
+end
+
+# Writes a string at y, x
+def putstr(window, row, column, string)
+  window.setpos(row, column)
+  window.addstr(string)
 end
 
 def init_screen
