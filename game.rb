@@ -13,6 +13,10 @@ class Point
     @x = x
     @y = y
   end
+
+  def +(point)
+    Point.new(@x + point.x, @y + point.y)
+  end
 end
 
 class RNG
@@ -53,9 +57,10 @@ class DungeonFloor
   def generate!
     @width.times do |x|
       @height.times do |y|
-        type = :floor
         if x == 0 or x == @width - 1 or y == 0 or y == @height - 1
           type = :wall
+        else
+          type = (RNG.roll('1d2') % 2 == 0) ? :floor : :wall
         end
 
         @tiles[x][y] = DungeonTile.new(type)
@@ -63,8 +68,9 @@ class DungeonFloor
     end
   end
   
-  def tile_at(x, y)
-    @tiles[x][y] unless x < 0 or y < 0 or x >= @width or y >= @height
+  def tile_at(point)
+    @tiles[point.x][point.y] unless point.x < 0 or point.y < 0 or 
+                                    point.x >= @width or point.y >= @height
   end
 end
 
@@ -80,15 +86,16 @@ class Dungeon
     @current_floor = @floors.first
   end
 
-  def tile_at(x, y)
-    @current_floor.tile_at(x, y)
+  def tile_at(point)
+    @current_floor.tile_at(point)
   end
 end
 
 class Creature
   attr_reader :health, :position, :symbol
 
-  def initialize(hitDie='1d6', symbol='?')
+  def initialize(dungeon, hitDie='1d6', symbol='?')
+    @dungeon = dungeon
     @health = RNG.roll(hitDie)
     @symbol = symbol
     @position = Point.new
@@ -96,7 +103,8 @@ class Creature
   
   # Offsets the creture by point
   def move(point)
-    @position += point
+    new_point = @position + point
+    @position = new_point if @dungeon.tile_at(new_point).passable
   end
 
   def take_turn
@@ -109,14 +117,21 @@ class Creature
 end
 
 class Player < Creature
-  def initialize
-    super('1d8', '@')
+  def initialize(dungeon)
+    super(dungeon, '1d8', '@')
   end
 
   def take_turn(key)
     case key
+    when Curses::Key::LEFT then move(Point.new(-1, 0))
+    when Curses::Key::RIGHT then move(Point.new(1, 0))
+    when Curses::Key::UP then move(Point.new(0, -1))
+    when Curses::Key::DOWN then move(Point.new(0, 1))
     when ?. then return true
+    else return false
     end
+
+    true
   end
 end
 
@@ -171,7 +186,7 @@ def render_game(game_win, player, dungeon)
   j = 0 # rows
   ((center.x - half_win_width)..(center.x + half_win_width)).each do |x|
     ((center.y - half_win_height)..(center.y + half_win_height)).each do |y|
-      tile = dungeon.tile_at(x, y)
+      tile = dungeon.tile_at(Point.new(x, y))
       symbol = (tile == nil) ? '?' : tile.symbol
       putch(game_win, j, i, symbol)
 
@@ -205,11 +220,11 @@ init_screen do |screen_width, screen_height|
   hud_win = Curses.stdscr.subwin(screen_height - 2, 20, 
                                     0, screen_width - 20)
 
-  player = Player.new
-  player.teleport(Point.new(5, 5))
-
   dungeon = Dungeon.new(DUNGEON_WIDTH, DUNGEON_HEIGHT, DUNGEON_FLOORS)
   
+  player = Player.new(dungeon)
+  player.teleport(Point.new(5, 5))
+
   game_running = true
   turn = 1
   while game_running do
