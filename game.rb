@@ -152,6 +152,13 @@ def init_screen
 end
 
 init_screen do |screen_width, screen_height|
+  # TODO: figure out if i should close these
+  game_win = Curses.stdscr.subwin(screen_height - 2, screen_width - 20, 
+                                  0, 0)
+
+  hud_win = Curses.stdscr.subwin(screen_height - 2, 20, 
+                                    0, screen_width - 20)
+
   DUNGEON_WIDTH  = 100
   DUNGEON_HEIGHT = 100
   DUNGEON_FLOORS = 2
@@ -160,15 +167,22 @@ init_screen do |screen_width, screen_height|
   dungeon = Dungeon.new(DUNGEON_WIDTH, DUNGEON_HEIGHT, DUNGEON_FLOORS)
   
   game_running = true
+  turn = 1
   while game_running do
-    #insert drawing here
     DUNGEON_WIDTH.times do |x|
       DUNGEON_HEIGHT.times do |y|
-        putch(Curses.stdscr, y, x, dungeon.tile_at(x, y).symbol)
+        putch(game_win, y, x, dungeon.tile_at(x, y).symbol)
       end
     end
+
+    putstr(hud_win, 1, 1, "Turn: #{turn}")
+
+    game_win.noutrefresh
+    hud_win.noutrefresh
+    Curses.refresh
     
     turn_taken = false
+    turn += 1
     until turn_taken
       input = Curses.getch
 
