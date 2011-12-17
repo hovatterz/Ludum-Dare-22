@@ -2,7 +2,9 @@ class GameName
   class Creature
     class Player < Creature
       def initialize(dungeon)
-        super(dungeon, '1d8', '@')
+        super(dungeon, '1d8')
+        @symbol = '@'
+        @name = 'Player'
       end
     
       # handles the players turn
