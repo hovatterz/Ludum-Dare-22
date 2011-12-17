@@ -76,7 +76,7 @@ def render_game(win, game)
 end
 
 def render_hud(win, game)
-  putstr(win, 1, 1, "Turn: #{game.turn}")
+  putstr(win, 0, 1, "Turn: #{game.turn}")
 
   win.noutrefresh
 end
