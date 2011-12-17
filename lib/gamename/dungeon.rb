@@ -2,9 +2,20 @@ class GameName
   class Dungeon
     ROOM_TYPES = [
       { :name  => 'Boy Band Practice Room', 
-        :range => 1..3 }, 
+        :range => 1..3,
+        :creatures => { 
+          :types => [Creature::BoyBandMember], 
+          :range => 2..4 } },
       { :name  => 'Insurance Call Center',
-        :range => 2..4 },
+        :range => 2..4,
+        :creatures => { 
+          :types => [Creature::InsuranceSalesman], 
+          :range => 3..5 } },
+      { :name  => 'Auto Mechanic Shop',
+        :range => 3..4,
+        :creatures => { 
+          :types => [Creature::Mechanic], 
+          :range => 2..3 } },
       { :name  => 'R\'lyeh',
         :range => 5..5,
         :limit => 1 }
