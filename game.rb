@@ -151,6 +151,23 @@ def init_screen
   end
 end
 
+def render_game(game_win)
+  #TODO: be player-centric
+  DUNGEON_WIDTH.times do |x|
+    DUNGEON_HEIGHT.times do |y|
+      putch(game_win, y, x, dungeon.tile_at(x, y).symbol)
+    end
+  end
+
+  game_win.noutrefresh
+end
+
+def render_hud(hud_win)
+  putstr(hud_win, 1, 1, "Turn: #{turn}")
+
+  hud_win.noutrefresh
+end
+
 init_screen do |screen_width, screen_height|
   # TODO: figure out if i should close these
   game_win = Curses.stdscr.subwin(screen_height - 2, screen_width - 20, 
@@ -169,16 +186,8 @@ init_screen do |screen_width, screen_height|
   game_running = true
   turn = 1
   while game_running do
-    DUNGEON_WIDTH.times do |x|
-      DUNGEON_HEIGHT.times do |y|
-        putch(game_win, y, x, dungeon.tile_at(x, y).symbol)
-      end
-    end
-
-    putstr(hud_win, 1, 1, "Turn: #{turn}")
-
-    game_win.noutrefresh
-    hud_win.noutrefresh
+    render_game(game_win)
+    render_hud(hud_win)
     Curses.refresh
     
     turn_taken = false
