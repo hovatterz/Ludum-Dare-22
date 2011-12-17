@@ -36,6 +36,13 @@ class GameName
 
   # Handles game logic
   def think
+    @dungeon.creatures.each do |c|
+      c.take_turn
+      if c.decay > 20 #corpse decay on the 20th turn
+        @dungeon.tile_at(c.position).creature = nil
+        @dungeon.creatures.delete(c)
+      end
+    end
   end
 
   # Returns the center of view

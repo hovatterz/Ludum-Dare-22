@@ -2,7 +2,7 @@ class GameName
   class Dungeon
     class Tile
       attr_accessor :creature
-      attr_reader :name, :passable
+      attr_reader :name
 
       # pass a :symbol for type
       def initialize(type)
@@ -20,6 +20,14 @@ class GameName
       # pass a :symbol for type
       def mutate!(type)
         set_type(type)
+      end
+
+      def passable?
+        if @creature and @creature.alive?
+          false
+        else
+          @passable
+        end
       end
 
       private
