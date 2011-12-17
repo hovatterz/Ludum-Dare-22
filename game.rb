@@ -17,6 +17,7 @@ end
 
 class RNG
   def self.roll(die)
+    # TODO: refactor this shit somehow
     parts = die.split('d')
     num_dice = parts[0].to_i
     sides = parts[1].to_i
@@ -27,20 +28,31 @@ class RNG
   end
 end
 
-puts RNG.roll('1d6')
-
 class Creature
-  def initialize
+  attr_reader :health
+
+  def initialize(hitDie='1d6')
+    @health = RNG.roll(hitDie)
+  end
+
+  def take_turn
   end
 end
 
 class Player < Creature
   def initialize
-    super
+    super('1d8')
+  end
+
+  def take_turn(key)
+    case key
+      case ?. then break # skip turn
+      end
+    end
   end
 end
 
-# Need to think of better enemies
+# TODO: Need to think of better enemies
 class Goblin < Creature
 
 end
@@ -58,10 +70,14 @@ def init_screen
   end
 end
 
-# init_screen do
-#  loop do
-#    case Curses.getch
-#    when ?q then break
-#    end
-#  end
-#end
+init_screen do
+  player = Player.new
+
+  loop do
+    input = Curses.getch
+    case input
+    when ?q then break # quit game  
+    else player.take_turn(input) # player takes turn
+    end
+  end
+end
