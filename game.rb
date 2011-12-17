@@ -86,10 +86,11 @@ class Dungeon
 end
 
 class Creature
-  attr_reader :health
+  attr_reader :health, :symbol
 
-  def initialize(hitDie='1d6')
+  def initialize(hitDie='1d6', symbol='?')
     @health = RNG.roll(hitDie)
+    @symbol = symbol
   end
 
   def take_turn
@@ -98,7 +99,7 @@ end
 
 class Player < Creature
   def initialize
-    super('1d8')
+    super('1d8', '@')
   end
 
   def take_turn(key)
