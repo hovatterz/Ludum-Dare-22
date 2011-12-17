@@ -5,12 +5,13 @@ class GameName
       ROOM_MIN_SIZE = 6
       MAX_ROOMS     = 100
 
-      attr_reader :player_start
+      attr_reader :player_start, :creatures
 
       def initialize(dungeon, width, height)
         @width = width
         @height = height
 
+        @creatures = Array.new
         @tiles = Array.new(width) { Array.new(height) }
         @rooms = {}
       end
@@ -18,8 +19,7 @@ class GameName
       def generate!(room_types)
         @width.times do |x|
           @height.times do |y|
-            @tiles[x][y] = {}
-            @tiles[x][y][:tile] = Tile.new(:wall)
+            @tiles[x][y] = Tile.new(:wall)
           end
         end
 
@@ -67,6 +67,27 @@ class GameName
                 new_room[:type] = type
               end
             end
+            
+            unless @rooms.empty?
+              if new_room[:type][:creatures]
+                num_creatures = Random.rand(new_room[:type][:creatures][:range])
+                num_creatures.times do |nc|
+                  position = nil
+                  until position
+                    rand_pos =  RNG.rand_point_in_rect(new_room[:rect])
+                    unless @tiles[rand_pos.x][rand_pos.y].creature
+                      position = rand_pos
+                    end
+                  end
+
+                  creature = new_room[:type][:creatures][:types].shuffle.first.new(@dungeon)
+                  creature.teleport(position)
+
+                  @tiles[position.x][position.y].creature = creature
+                  @creatures << creature
+                end
+              end
+            end
 
             @rooms[new_room[:rect]] = new_room
             last_rect = new_room[:rect]
@@ -87,7 +108,7 @@ class GameName
       def tile_at(point)
         if point.x > 0 and point.y > 0 and 
            point.x < @width and point.y < @height
-          return @tiles[point.x][point.y][:tile]
+          return @tiles[point.x][point.y]
         end
 
         Tile.new(:wall)
@@ -104,7 +125,7 @@ class GameName
 
         (x_min..x_max).each do |x|
           (y_min..y_max).each do |y|
-            @tiles[x][y][:tile].mutate!(:floor)
+            @tiles[x][y].mutate!(:floor)
           end
         end
       end
@@ -115,7 +136,7 @@ class GameName
         max = [x, x2].max
 
         (min..max).each do |x|
-          @tiles[x][y][:tile].mutate!(:floor)
+          @tiles[x][y].mutate!(:floor)
         end
       end
 
@@ -125,7 +146,7 @@ class GameName
         max = [y, y2].max
 
         (min..max).each do |y|
-          @tiles[x][y][:tile].mutate!(:floor)
+          @tiles[x][y].mutate!(:floor)
         end
       end
     end

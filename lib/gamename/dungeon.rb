@@ -7,7 +7,7 @@ class GameName
           :types => [Creature::BoyBandMember], 
           :range => 2..4 } },
       { :name  => 'Insurance Call Center',
-        :range => 2..4,
+        :range => 1..4,
         :creatures => { 
           :types => [Creature::InsuranceSalesman], 
           :range => 3..5 } },
@@ -40,6 +40,10 @@ class GameName
 
       @current_floor = @floors.first
       @player.teleport(@current_floor.player_start)
+    end
+
+    def creatures
+      @current_floor.creatures
     end
 
     def room_at(point)

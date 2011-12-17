@@ -1,11 +1,20 @@
 class GameName
   class Dungeon
     class Tile
-      attr_reader :name, :passable, :symbol
+      attr_accessor :creature
+      attr_reader :name, :passable
 
       # pass a :symbol for type
       def initialize(type)
         set_type(type)
+      end
+
+      def symbol
+        if @creature
+          @creature.symbol
+        else
+          @symbol
+        end
       end
 
       # pass a :symbol for type
