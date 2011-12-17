@@ -3,6 +3,18 @@ class GameName::Dungeon::Tile
 
   # pass a :symbol for type
   def initialize(type)
+    set_type(type)
+  end
+
+  # pass a :symbol for type
+  def mutate!(type)
+    set_type(type)
+  end
+
+  private
+
+  # pass a :symbol for type
+  def set_type(type)
     case type
     when :wall
       @name = 'wall'

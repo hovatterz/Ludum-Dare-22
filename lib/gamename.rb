@@ -12,7 +12,7 @@ class GameName
     @dungeon = Dungeon.new(width, height, floors)
 
     @player = Creature::Player.new(@dungeon)
-    @player.teleport(Point.new(5, 5))
+    @player.teleport(Point.new(25, 23))
   end
 
   def handle_input()
