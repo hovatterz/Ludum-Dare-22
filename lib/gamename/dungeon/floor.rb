@@ -12,9 +12,10 @@ class GameName
         @height = height
 
         @tiles = Array.new(width) { Array.new(height) }
+        @rooms = {}
       end
 
-      def generate!
+      def generate!(room_types)
         @width.times do |x|
           @height.times do |y|
             @tiles[x][y] = {}
@@ -22,31 +23,32 @@ class GameName
           end
         end
 
-        rooms = Array.new
+        last_rect = nil
         MAX_ROOMS.times do |r|
           w = Random.rand(ROOM_MIN_SIZE..ROOM_MAX_SIZE)
           h = Random.rand(ROOM_MIN_SIZE..ROOM_MAX_SIZE)
           x = Random.rand(0..(@width - w - 1))
           y = Random.rand(0..(@height - h - 1))
 
-          new_room = Rect.new(x, y, w, h)
+          new_room = {}
+          new_room[:rect] = Rect.new(x, y, w, h)
 
           failed = false
-          rooms.each do |other_room|
-            if new_room.intersects?(other_room)
+          @rooms.each do |other_rect, other_room|
+            if new_room[:rect].intersects?(other_rect)
               failed = true
               break
             end
           end
 
           unless failed
-            create_room(new_room)
-            new_center = new_room.center
+            create_room(new_room[:rect])
+            new_center = new_room[:rect].center
 
-            if rooms.empty?
+            if @rooms.empty?
               @player_start = new_center
             else
-              old_center = rooms.last.center
+              old_center = last_rect.center
               if Random.rand(0..1) == 1
                 # first move horizontally, then vertically
                 create_h_tunnel(old_center.x, new_center.x, old_center.y)
@@ -57,12 +59,31 @@ class GameName
                 create_h_tunnel(old_center.x, new_center.x, new_center.y)
               end
             end
+            
+            until new_room[:type]
+              type = room_types.shuffle.first
+              length = @rooms.select {|rect, room| room[:type] == type }.length
+              unless type[:limit] and type[:limit] > length
+                new_room[:type] = type
+              end
+            end
 
-            rooms << new_room
+            @rooms[new_room[:rect]] = new_room
+            last_rect = new_room[:rect]
           end
         end
       end
-      
+
+      # Returns a hash of room data at a point
+      def room_at(point)
+        room = @rooms.select {|rect, room| rect.contains?(point) }
+        room = room.flatten.last
+        if room
+          room[:type]
+        end
+      end
+  
+      # Returns a tile at a point
       def tile_at(point)
         if point.x > 0 and point.y > 0 and 
            point.x < @width and point.y < @height
