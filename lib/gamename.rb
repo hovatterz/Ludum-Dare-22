@@ -46,6 +46,7 @@ class GameName
 end
 
 require 'gamename/point'
+require 'gamename/rect'
 require 'gamename/rng'
 require 'gamename/creature'
 require 'gamename/dungeon'
