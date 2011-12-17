@@ -5,9 +5,12 @@ class GameName
       ROOM_MIN_SIZE = 6
       MAX_ROOMS     = 100
 
-      def initialize(width, height)
+      attr_reader :player_start
+
+      def initialize(dungeon, width, height)
         @width = width
         @height = height
+
         @tiles = Array.new(width) { Array.new(height) }
       end
 
@@ -40,7 +43,9 @@ class GameName
             create_room(new_room)
             new_center = new_room.center
 
-            unless rooms.empty?
+            if rooms.empty?
+              @player_start = new_center
+            else
               old_center = rooms.last.center
               if Random.rand(0..1) == 1
                 # first move horizontally, then vertically

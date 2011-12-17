@@ -9,10 +9,9 @@ class GameName
   end
 
   def generate_dungeon(width, height, floors)
-    @dungeon = Dungeon.new(width, height, floors)
-
+    @dungeon = Dungeon.new()
     @player = Creature::Player.new(@dungeon)
-    @player.teleport(Point.new(25, 23))
+    @dungeon.generate!(width, height, floors, @player)
   end
 
   def handle_input()

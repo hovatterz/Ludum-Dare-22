@@ -1,14 +1,17 @@
 class GameName
   class Dungeon
-    def initialize(width, height, floors)
+    def generate!(width, height, floors, player)
+      @player = player
+
       @floors = Array.new
       floors.times do
-        floor = Floor.new(width, height)
+        floor = Floor.new(self, width, height)
         floor.generate!
         @floors << floor
       end
 
       @current_floor = @floors.first
+      @player.teleport(@current_floor.player_start)
     end
 
     def tile_at(point)
