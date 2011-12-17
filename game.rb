@@ -19,11 +19,8 @@ class RNG
   def self.roll(die)
     # TODO: refactor this shit somehow
     parts = die.split('d')
-    num_dice = parts[0].to_i
-    sides = parts[1].to_i
     result = 0
-
-    num_dice.times { result += Random.rand(1..sides) }
+    parts[0].to_i.times { result += Random.rand(1..parts[1].to_i) }
     result
   end
 end
