@@ -14,7 +14,8 @@ class GameName
       def generate!
         @width.times do |x|
           @height.times do |y|
-            @tiles[x][y] = Tile.new(:wall)
+            @tiles[x][y] = {}
+            @tiles[x][y][:tile] = Tile.new(:wall)
           end
         end
 
@@ -58,8 +59,12 @@ class GameName
       end
       
       def tile_at(point)
-        @tiles[point.x][point.y] unless point.x < 0 or point.y < 0 or 
-                                        point.x >= @width or point.y >= @height
+        if point.x > 0 and point.y > 0 and 
+           point.x < @width and point.y < @height
+          return @tiles[point.x][point.y][:tile]
+        end
+
+        Tile.new(:wall)
       end
 
       private
@@ -73,7 +78,7 @@ class GameName
 
         (x_min..x_max).each do |x|
           (y_min..y_max).each do |y|
-            @tiles[x][y].mutate!(:floor)
+            @tiles[x][y][:tile].mutate!(:floor)
           end
         end
       end
@@ -84,7 +89,7 @@ class GameName
         max = [x, x2].max
 
         (min..max).each do |x|
-          @tiles[x][y].mutate!(:floor)
+          @tiles[x][y][:tile].mutate!(:floor)
         end
       end
 
@@ -94,7 +99,7 @@ class GameName
         max = [y, y2].max
 
         (min..max).each do |y|
-          @tiles[x][y].mutate!(:floor)
+          @tiles[x][y][:tile].mutate!(:floor)
         end
       end
     end
