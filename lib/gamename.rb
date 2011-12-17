@@ -15,9 +15,10 @@ class GameName
     @player.teleport(Point.new(5, 5))
   end
 
-  def handle_input(input)
+  def handle_input()
     turn_taken = false
     until turn_taken
+      input = Curses.getch
       case input
       when ?Q then # quit game
          @running = false

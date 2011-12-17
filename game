@@ -90,7 +90,7 @@ init_screen do |game_win, hud_win|
     render_hud(hud_win, game)
     Curses.refresh
 
-    game.handle_input(Curses.getch)
+    game.handle_input()
     game.think
   end
 end
