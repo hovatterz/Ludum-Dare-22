@@ -47,7 +47,7 @@ class DungeonFloor
   def initialize(width, height)
     @width = width
     @height = height
-    @tiles = Array.new(width * height)
+    @tiles = Array.new(width) { Array.new(height) }
   end
 
   def generate!
@@ -58,13 +58,13 @@ class DungeonFloor
           type = :wall
         end
 
-        @tiles[y * @width + x] = DungeonTile.new(type)
+        @tiles[x][y] = DungeonTile.new(type)
       end
     end
   end
   
   def tile_at(x, y)
-    @tiles[y * @width + x]
+    @tiles[x][y] unless x < 0 or y < 0 or x >= @width or y >= @height
   end
 end
 
@@ -194,8 +194,8 @@ def render_hud(hud_win, turn)
 end
 
 init_screen do |screen_width, screen_height|
-  DUNGEON_WIDTH  = 10
-  DUNGEON_HEIGHT = 10
+  DUNGEON_WIDTH  = 100
+  DUNGEON_HEIGHT = 100
   DUNGEON_FLOORS = 2
 
   # TODO: figure out if i should close these
