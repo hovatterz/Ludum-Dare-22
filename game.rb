@@ -25,6 +25,66 @@ class RNG
   end
 end
 
+class DungeonTile
+  attr_reader :name, :passable, :symbol
+
+  # pass a :symbol for type
+  def initialize(type)
+    case type
+    when :wall
+      @name = 'wall'
+      @passable = false
+      @symbol = '#'
+    when :floor
+      @name = 'floor'
+      @passable = true
+      @symbol = '.'
+    end
+  end
+end
+
+class DungeonFloor
+  def initialize(width, height)
+    @width = width
+    @height = height
+    @tiles = Array.new(width * height)
+  end
+
+  def generate!
+    @width.times do |x|
+      @height.times do |y|
+        type = :floor
+        if x == 0 or x == @width - 1 or y == 0 or y == @height - 1
+          type = :wall
+        end
+
+        @tiles[y * @width + x] = DungeonTile.new(type)
+      end
+    end
+  end
+  
+  def tile_at(x, y)
+    @tiles[y * @width + x]
+  end
+end
+
+class Dungeon
+  def initialize(width, height, floors)
+    @floors = Array.new
+    floors.times do
+      floor = DungeonFloor.new(width, height)
+      floor.generate!
+      @floors << floor
+    end
+
+    @current_floor = @floors.first
+  end
+
+  def tile_at(x, y)
+    @current_floor.tile_at(x, y)
+  end
+end
+
 class Creature
   attr_reader :health
 
@@ -81,11 +141,21 @@ def init_screen
 end
 
 init_screen do
+  DUNGEON_WIDTH  = 100
+  DUNGEON_HEIGHT = 100
+  DUNGEON_FLOORS = 2
+
   player = Player.new
+  dungeon = Dungeon.new(DUNGEON_WIDTH, DUNGEON_HEIGHT, DUNGEON_FLOORS)
   
   game_running = true
   while game_running do
     #insert drawing here
+    DUNGEON_WIDTH.times do |x|
+      DUNGEON_HEIGHT.times do |y|
+        putch(Curses.stdscr, y, x, dungeon.tile_at(x, y).symbol)
+      end
+    end
     
     turn_taken = false
     until turn_taken
