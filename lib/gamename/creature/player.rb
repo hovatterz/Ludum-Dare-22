@@ -25,15 +25,15 @@ class GameName
       # handles the players turn
       def take_turn(key)
         case key
-        when Curses::Key::LEFT, ?h then move(Point.new(-1, 0))
-        when Curses::Key::RIGHT, ?l then move(Point.new(1, 0))
-        when Curses::Key::UP, ?k then move(Point.new(0, -1))
-        when Curses::Key::DOWN, ?j then move(Point.new(0, 1))
-        when ?y then move(Point.new(-1, -1))
-        when ?u then move(Point.new(1, -1))
-        when ?b then move(Point.new(-1, 1))
-        when ?n then move(Point.new(1, 1))
-        when ?. then return true
+        when Curses::Key::LEFT, ?h  then return move(Point.new(-1, 0))
+        when Curses::Key::RIGHT, ?l then return move(Point.new(1, 0))
+        when Curses::Key::UP, ?k    then return move(Point.new(0, -1))
+        when Curses::Key::DOWN, ?j  then return move(Point.new(0, 1))
+        when ?y                     then return move(Point.new(-1, -1))
+        when ?u                     then return move(Point.new(1, -1))
+        when ?b                     then return move(Point.new(-1, 1))
+        when ?n                     then return move(Point.new(1, 1))
+        when ?.                     then return true
         else return false
         end
 
