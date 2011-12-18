@@ -14,7 +14,7 @@ class GameName
       @unarmed_damage = unarmed_damage
 
       @position = Point.new
-      @max_health = @health = RNG.roll(@hit_die)
+      @max_health = @health = @hit_die.split('d')[1].to_i
       @inventory = GameName::Inventory.new
       @adjective = ADJECTIVES.shuffle.first
       @name = 'Shapeless Beast'
