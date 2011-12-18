@@ -7,11 +7,13 @@ class GameName
     attr_reader :decay, :health, :position
 
     # Initialize with the dungeon and a hitDie string
-    def initialize(dungeon, hitDie='1d6')
+    def initialize(dungeon, hit_die='1d6', unarmed_damage='1d2')
       @dungeon = dungeon
-      @health = RNG.roll(hitDie)
+      @hit_die = hit_die
+      @unarmed_damage = unarmed_damage
+
       @position = Point.new
-  
+      @health = RNG.roll(@hit_die)
       @adjective = ADJECTIVES.shuffle.first
       @decay = 0
       @name = 'Shapeless Beast'
@@ -24,7 +26,7 @@ class GameName
 
     # Attacks another creature
     def attack(other_creature)
-      other_creature.inflict(500)
+      other_creature.inflict(GameName::RNG.roll(@unarmed_damage))
     end
 
     # Inflicts damage upon this creature

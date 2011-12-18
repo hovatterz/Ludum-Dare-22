@@ -78,6 +78,7 @@ end
 def render_hud(win, game)
   putstr(win, 0, 1, game.player.name)
   putstr(win, 1, 1, "Turn: #{game.turn}")
+  putstr(win, 2, 1, "Health: #{game.player.health}")
 
   win.noutrefresh
 end
