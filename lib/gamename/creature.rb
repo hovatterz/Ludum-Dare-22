@@ -33,15 +33,21 @@ class GameName
     end
 
     # Offsets the creature by point
-    def move(point, attack=true)
-      new_point = @position + point
-      tile = @dungeon.tile_at(new_point)
-      if tile.passable?
-        @dungeon.tile_at(position).creature = nil
+    def move(point, attack=true, absolute=false)
+      if absolute
+        new_point = point
+        tile = @dungeon.tile_at(new_point)
+      else
+        new_point = @position + point
+        tile = @dungeon.tile_at(new_point)
+      end
+
+      if tile.creature and tile.creature.class != self.class and tile.creature.alive?
+        attack(tile.creature)
+      elsif tile.passable?
+        @dungeon.tile_at(@position).creature = nil
         @position = new_point
         tile.creature = self
-      elsif attack and tile.creature and tile.creature.alive?
-        attack(tile.creature)
       end
     end
 
@@ -57,9 +63,13 @@ class GameName
       end
     end
 
-    def take_turn
+    def take_turn(player)
       if alive?
-        ai_wander
+        if player.position.distance_from(@position) < 15
+          ai_chase(player)
+        else
+          ai_wander
+        end
       else
         @decay += 1
       end
@@ -80,7 +90,15 @@ class GameName
         rand_offset = Point.new(Random.rand(-1..1), Random.rand(-1..1))
         moved = true if move(rand_offset, false)
         tries += 1
-        break if tries > 3 # let prevent an infinite loop in case they get stuck
+        break if tries > 2 # let prevent an infinite loop in case they get stuck
+      end
+    end
+
+    def ai_chase(entity)
+      nodes ||= @dungeon.tile_at(@position).path_to(@dungeon.tile_at(entity.position))[1]
+      if nodes and nodes.length > 1
+        nodes.shift
+        move(nodes[0].position, true, true)
       end
     end
   end

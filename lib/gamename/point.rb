@@ -6,8 +6,20 @@ class GameName::Point
     @y = y
   end
 
-  def +(point)
-    GameName::Point.new(@x + point.x, @y + point.y)
+  def abs
+    GameName::Point.new(@x.abs, @y.abs)
+  end
+
+  def distance_from(other)
+    Math.sqrt((other.x - @x) ** 2 + (other.y - @y) ** 2)
+  end
+
+  def +(other)
+    GameName::Point.new(@x + other.x, @y + other.y)
+  end
+
+  def -(other)
+    GameName::Point.new(@x - other.x, @y - other.y)
   end
 end
 

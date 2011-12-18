@@ -23,7 +23,7 @@ class GameName
          @running = false
          turn_taken = true
       else
-        turn_taken = true if player.take_turn(input) # player takes turn
+        turn_taken = true if @player.take_turn(input) # player takes turn
       end
     end
     
@@ -37,7 +37,7 @@ class GameName
   # Handles game logic
   def think
     @dungeon.creatures.each do |c|
-      c.take_turn
+      c.take_turn(@player)
       if c.decay > 20 #corpse decay on the 20th turn
         @dungeon.tile_at(c.position).creature = nil
         @dungeon.creatures.delete(c)
@@ -54,5 +54,6 @@ end
 require 'gamename/point'
 require 'gamename/rect'
 require 'gamename/rng'
+require 'gamename/astarnode'
 require 'gamename/creature'
 require 'gamename/dungeon'

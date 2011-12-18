@@ -1,12 +1,14 @@
 class GameName
   class Dungeon
-    class Tile
+    class Tile < GameName::AStarNode
       attr_accessor :creature
-      attr_reader :name
+      attr_reader :name, :position
 
       # pass a :symbol for type
-      def initialize(type)
+      def initialize(type, dungeon, position)
         set_type(type)
+        @dungeon = dungeon
+        @position = position
       end
 
       def symbol
@@ -22,12 +24,35 @@ class GameName
         set_type(type)
       end
 
+      def hash
+        (@position.x << 16) | @position.y
+      end
+
       def passable?
-        if @creature and @creature.alive?
-          false
-        else
-          @passable
-        end
+        @passable
+      end
+
+      def neighbors
+        result = [
+          @dungeon.tile_at(@position + GameName::Point.new(0, -1)),
+          @dungeon.tile_at(@position + GameName::Point.new(-1,  -1)),
+          @dungeon.tile_at(@position + GameName::Point.new(1,  -1)),
+          @dungeon.tile_at(@position + GameName::Point.new(0,  1)),
+          @dungeon.tile_at(@position + GameName::Point.new(-1,  1)),
+          @dungeon.tile_at(@position + GameName::Point.new(1,  1)),
+          @dungeon.tile_at(@position + GameName::Point.new(-1, 0)),
+          @dungeon.tile_at(@position + GameName::Point.new(1,  0))
+        ]
+        result.delete_if {|node| node.passable? == false}
+        result
+      end
+
+      def guess_distance(node)
+        (@position.x - node.position.x).abs + (@position.y - node.position.y).abs
+      end
+
+      def movement_cost(neighbor)
+        1
       end
 
       private

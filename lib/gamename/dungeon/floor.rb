@@ -20,7 +20,7 @@ class GameName
       def generate!(room_types)
         @width.times do |x|
           @height.times do |y|
-            @tiles[x][y] = Tile.new(:wall)
+            @tiles[x][y] = Tile.new(:wall, @dungeon, Point.new(x, y))
           end
         end
 
@@ -112,7 +112,7 @@ class GameName
           return @tiles[point.x][point.y]
         end
 
-        Tile.new(:wall)
+        Tile.new(:wall, @dungeon, point)
       end
 
       private
