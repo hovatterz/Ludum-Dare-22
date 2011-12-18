@@ -26,7 +26,9 @@ class GameName
 
     # Attacks another creature
     def attack(other_creature)
-      other_creature.inflict(self, GameName::RNG.roll(@unarmed_damage))
+      damage = GameName::RNG.roll(@unarmed_damage)
+      other_creature.inflict(self, damage)
+      damage
     end
 
     # Inflicts damage upon this creature
