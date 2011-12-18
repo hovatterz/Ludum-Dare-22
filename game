@@ -22,6 +22,7 @@ def init_screen
   Curses.noecho
   Curses.init_screen
   Curses.start_color
+  Curses.cbreak
   Curses.stdscr.keypad(1)
   Curses.curs_set(0)
 
