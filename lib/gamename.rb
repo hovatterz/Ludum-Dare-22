@@ -77,6 +77,7 @@ require 'gamename/rect'
 require 'gamename/rng'
 require 'gamename/astarnode'
 require 'gamename/fov'
+require 'gamename/inventory'
 require 'gamename/creature'
 require 'gamename/dungeon'
 

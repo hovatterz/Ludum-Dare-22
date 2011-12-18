@@ -1,7 +1,7 @@
 class GameName
   class Dungeon
     class Tile < GameName::AStarNode
-      attr_accessor :creature, :lit
+      attr_accessor :creature, :items, :lit
       attr_reader :name, :passable, :position, :seen, :transparent
 
       # pass a :symbol for type
