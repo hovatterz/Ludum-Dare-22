@@ -14,6 +14,7 @@ class GameName
     @player = Creature::Player.new(@dungeon)
     @dungeon.generate!(width, height, floors, @player)
     @fov = FOV.new(@dungeon)
+    @over = false
   end
 
   def handle_input()
@@ -32,6 +33,10 @@ class GameName
     @turn += 1
   end
 
+  def over?
+    @over
+  end
+
   def running?
     @running
   end
@@ -39,12 +44,15 @@ class GameName
   # Handles game logic
   def think
     @dungeon.creatures.each do |c|
-      c.take_turn(@player)
-      if c.decay > 20 #corpse decay on the 20th turn
+      if c.alive?
+        c.take_turn(@player)
+      else
         @dungeon.tile_at(c.position).creature = nil
         @dungeon.creatures.delete(c)
       end
     end
+
+    @over = true unless player.alive?
     
     @dungeon.darken
     @fov.calculate(@player.position, 10)
@@ -71,3 +79,4 @@ require 'gamename/astarnode'
 require 'gamename/fov'
 require 'gamename/creature'
 require 'gamename/dungeon'
+

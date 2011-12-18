@@ -5,7 +5,7 @@ class GameName
                    'fabulous', 'disgusting', 'appalling', 'chilling']
 
     attr_accessor :health
-    attr_reader :decay, :max_health, :position
+    attr_reader :max_health, :position
 
     # Initialize with the dungeon and a hitDie string
     def initialize(dungeon, hit_die='1d6', unarmed_damage='1d2')
@@ -16,7 +16,6 @@ class GameName
       @position = Point.new
       @max_health = @health = RNG.roll(@hit_die)
       @adjective = ADJECTIVES.shuffle.first
-      @decay = 0
       @name = 'Shapeless Beast'
       @symbol = '?'
       
@@ -75,18 +74,14 @@ class GameName
     end
 
     def take_turn(player)
-      if alive?
-        if @has_been_seen or @dungeon.tile_at(@position).lit
-          ai_chase(player)
-        else
-          ai_wander
-        end
-
-        if !@has_been_seen and @dungeon.tile_at(@position).lit
-          @has_been_seen = true
-        end
+      if @has_been_seen or @dungeon.tile_at(@position).lit
+        ai_chase(player)
       else
-        @decay += 1
+        ai_wander
+      end
+
+      if !@has_been_seen and @dungeon.tile_at(@position).lit
+        @has_been_seen = true
       end
     end
 

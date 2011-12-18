@@ -126,6 +126,14 @@ init_screen do |game_win, hud_win, msg_win|
     render_msg(msg_win, game)
     Curses.refresh
 
+    if game.over?
+      msg_win.clear
+      putstr(msg_win, 0, 0, 'You have died. Press \'q\' to quit...')
+      msg_win.refresh
+      until Curses.getch == ?q; end
+      break
+    end
+
     game.handle_input()
     game.think
   end
