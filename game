@@ -40,11 +40,11 @@ def init_screen
     Curses.stdscr.refresh
   end
 
-  game_win = Curses.stdscr.subwin(Curses.lines - 2, Curses.cols - 20, 
+  game_win = Curses.stdscr.subwin(Curses.lines - 2, Curses.cols - 30, 
                                   0, 0)
 
-  hud_win = Curses.stdscr.subwin(Curses.lines - 2, 20, 
-                                 0, Curses.cols - 20)
+  hud_win = Curses.stdscr.subwin(Curses.lines - 2, 30, 
+                                 0, Curses.cols - 30)
 
   msg_win = Curses.stdscr.subwin(2, Curses.cols, Curses.lines - 2, 0)
 
