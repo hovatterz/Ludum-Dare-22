@@ -47,7 +47,7 @@ class GameName
     end
     
     @dungeon.darken
-    @fov.calculate(@player.position, 8)
+    @fov.calculate(@player.position, 10)
   end
 
   # Returns the center of view
