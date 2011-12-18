@@ -21,7 +21,11 @@ class GameName
         :limit => 1 }
     ]
 
+    attr_reader :height, :width
+
     def generate!(width, height, floors, player)
+      @width = width
+      @height = height
       @player = player
 
       @floors = Array.new
@@ -44,6 +48,14 @@ class GameName
 
     def creatures
       @current_floor.creatures
+    end
+
+    def darken
+      @width.times do |x|
+        @height.times do |y|
+          @current_floor.tile_at(Point.new(x, y)).lit = false
+        end
+      end
     end
 
     def room_at(point)

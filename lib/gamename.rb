@@ -1,7 +1,7 @@
 require 'curses'
 
 class GameName
-  attr_reader :dungeon, :player, :turn
+  attr_reader :dungeon, :fov, :player, :turn
   @@announcements = []
 
   def initialize
@@ -10,9 +10,10 @@ class GameName
   end
 
   def generate_dungeon(width, height, floors)
-    @dungeon = Dungeon.new()
+    @dungeon = Dungeon.new
     @player = Creature::Player.new(@dungeon)
     @dungeon.generate!(width, height, floors, @player)
+    @fov = FOV.new(@dungeon)
   end
 
   def handle_input()
@@ -44,6 +45,9 @@ class GameName
         @dungeon.creatures.delete(c)
       end
     end
+    
+    @dungeon.darken
+    @fov.calculate(@player.position, 8)
   end
 
   # Returns the center of view
@@ -60,5 +64,6 @@ require 'gamename/point'
 require 'gamename/rect'
 require 'gamename/rng'
 require 'gamename/astarnode'
+require 'gamename/fov'
 require 'gamename/creature'
 require 'gamename/dungeon'

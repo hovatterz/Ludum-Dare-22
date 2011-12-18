@@ -58,10 +58,10 @@ def render_game(win, game)
   ((center.x - half_width)..(center.x + half_width)).each do |x|
     ((center.y - half_height)..(center.y + half_height)).each do |y|
       tile = game.dungeon.tile_at(GameName::Point.new(x, y))
-      if tile
+      if tile and tile.lit
         symbol = tile.symbol
       else
-        symbol = '?' # this is bad
+        symbol = ' '
       end
       putch(win, j, i, symbol)
 

@@ -1,8 +1,8 @@
 class GameName
   class Dungeon
     class Tile < GameName::AStarNode
-      attr_accessor :creature
-      attr_reader :name, :position
+      attr_accessor :creature, :lit
+      attr_reader :name, :passable, :position, :transparent
 
       # pass a :symbol for type
       def initialize(type, dungeon, position)
@@ -28,10 +28,6 @@ class GameName
         (@position.x << 16) | @position.y
       end
 
-      def passable?
-        @passable
-      end
-
       def neighbors
         result = [
           @dungeon.tile_at(@position + GameName::Point.new(0, -1)),
@@ -43,7 +39,7 @@ class GameName
           @dungeon.tile_at(@position + GameName::Point.new(-1, 0)),
           @dungeon.tile_at(@position + GameName::Point.new(1,  0))
         ]
-        result.delete_if {|node| node.passable? == false}
+        result.delete_if {|node| node.passable == false}
         result
       end
 
@@ -64,10 +60,12 @@ class GameName
           @name = 'wall'
           @passable = false
           @symbol = '#'
+          @transparent = false
         when :floor
           @name = 'floor'
           @passable = true
           @symbol = '.'
+          @transparent = true
         end
       end
     end
