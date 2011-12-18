@@ -19,7 +19,7 @@ class GameName
     # Removes the item from the hash and returns it
     def remove_item(key)
       item = @items[key]
-      @items[key] = nil
+      @items.delete(key)
       item
     end
   end

@@ -57,8 +57,8 @@ class GameName
     @dungeon.darken
     @fov.calculate(@player.position, 10)
 
-    if turn % 5 == 0 and @player.health < @player.max_health
-      @player.health += 1
+    if turn % 5 == 0
+      @player.heal(1)
     end
   end
 
@@ -78,6 +78,7 @@ require 'gamename/rng'
 require 'gamename/astarnode'
 require 'gamename/fov'
 require 'gamename/inventory'
+require 'gamename/item'
 require 'gamename/creature'
 require 'gamename/dungeon'
 

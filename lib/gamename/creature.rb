@@ -34,6 +34,10 @@ class GameName
       damage
     end
 
+    def heal(points)
+      @health = [@health + points, @max_health].min
+    end
+
     # Inflicts damage upon this creature
     def inflict(who, damage)
       @health -= damage
