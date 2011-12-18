@@ -50,7 +50,8 @@ class GameName
         tile = @dungeon.tile_at(c.position)
         tile.creature = nil
         @dungeon.creatures.delete(c)
-        tile.items.push(Item::Potion.new)
+
+        tile.items.push(Item::Potion.new) if RNG.roll('1d6') == 3
       end
     end
 
