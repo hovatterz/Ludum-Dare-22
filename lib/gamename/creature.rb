@@ -48,11 +48,15 @@ class GameName
 
       if tile.creature and tile.creature.class != self.class and tile.creature.alive?
         attack(tile.creature)
+        return true
       elsif tile.passable
         @dungeon.tile_at(@position).creature = nil
         @position = new_point
         tile.creature = self
+        return true
       end
+
+      false
     end
 
     def name
