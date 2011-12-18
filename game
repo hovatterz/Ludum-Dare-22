@@ -89,8 +89,15 @@ end
 
 def render_msg(win, game)
   win.clear
-
-  putstr(win, 0, 0, GameName.announcements.last)
+  
+  y = 0
+  messages = GameName.announcements.slice(-2, 2)
+  if messages
+    messages.reverse_each do |msg|
+      putstr(win, y, 0, msg)
+      y += 1
+    end
+  end
 
   win.noutrefresh
 end
