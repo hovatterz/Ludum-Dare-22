@@ -104,11 +104,11 @@ def render_msg(win, game)
   win.clear
   
   y = 0
-  messages = GameName.announcements.slice(-2, 2)
-  if messages
-    messages.reverse_each do |msg|
+  if GameName.announcements
+    GameName.announcements.reverse_each do |msg|
       putstr(win, y, 0, msg)
       y += 1
+      break if y > 1
     end
   end
 
