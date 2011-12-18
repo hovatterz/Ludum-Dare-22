@@ -105,6 +105,7 @@ def render_hud(win, game)
   y = 0
   inventory.each do |key, item|
     putstr(win, 5 + y, 1, "(#{key}) #{item.name}")
+    y += 1
   end
 
   win.noutrefresh

@@ -10,16 +10,20 @@ class GameName
         @dungeon = dungeon
         @position = position
         @seen = false
+        @items = Array.new
       end
 
       def color
         return 5 if @creature
+        return 6 if @items.length > 0
         @color
       end
 
       def symbol
         if @creature and @lit
           @creature.symbol
+        elsif @items.length > 0
+          '%'
         else
           @symbol
         end

@@ -47,8 +47,10 @@ class GameName
       if c.alive?
         c.take_turn(@player)
       else
-        @dungeon.tile_at(c.position).creature = nil
+        tile = @dungeon.tile_at(c.position)
+        tile.creature = nil
         @dungeon.creatures.delete(c)
+        tile.items.push(Item::Potion.new)
       end
     end
 

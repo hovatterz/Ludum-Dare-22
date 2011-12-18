@@ -13,6 +13,10 @@ class GameName
     def equip
       GameName.announcements.push('You can\'t equip that!')
     end
+
+    def to_s
+      @name
+    end
   end
 end
 

@@ -10,12 +10,41 @@ class GameName
         @inventory.add_item(Item::Potion.new)
       end
 
+      def get
+        items = @dungeon.tile_at(@position).items
+        if items.length > 0
+          item = items.pop
+          @inventory.add_item(item)
+          GameName.announcements.push("You pick up a(n) #{item}.")
+          return true
+        else
+          GameName.announcements.push('But there\'s nothing here...')
+          return true #TODO make this not true
+        end
+      end
+
       def heal(points, announce=false)
         super(points)
 
         if announce
           GameName.announcements.push("You are healed for #{points} points!")
         end
+      end
+
+      def move(point, attack=true, absolute=false)
+        moved = super(point, attack, absolute)
+        
+        if moved
+          items = @dungeon.tile_at(@position).items
+          if items.length > 0
+            if items.length == 1
+              GameName.announcements.push("There is a(n) #{items.to_s} here.")
+            else
+              GameName.announcements.push("There are some items (#{items.to_s}) here.")
+            end
+          end
+        end
+        moved
       end
 
       def name
@@ -47,6 +76,7 @@ class GameName
         when ?n then return move(Point.new(1, 1))
           # Items
         when ?U then return use_item
+        when ?g then return get
           # Misc
         when ?.                     then return true
         else return false
