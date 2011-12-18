@@ -106,6 +106,7 @@ init_screen do |game_win, hud_win, msg_win|
   game = GameName.new
   game.generate_dungeon(100, 100, 2)
 
+  game.think
   while game.running?
     render_game(game_win, game)
     render_hud(hud_win, game)
