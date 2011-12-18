@@ -26,6 +26,12 @@ def init_screen
   Curses.stdscr.keypad(1)
   Curses.curs_set(0)
 
+  Curses.init_pair(1, Curses::COLOR_WHITE,   Curses::COLOR_BLACK)
+  Curses.init_pair(2, Curses::COLOR_MAGENTA, Curses::COLOR_BLACK)
+  Curses.init_pair(3, Curses::COLOR_BLUE,    Curses::COLOR_BLACK)
+  Curses.init_pair(4, Curses::COLOR_YELLOW,  Curses::COLOR_BLACK)
+  Curses.init_pair(5, Curses::COLOR_RED,     Curses::COLOR_BLACK)
+
   while Curses.cols < MIN_WIDTH or Curses.lines < MIN_HEIGHT
     # fffffuuuuuuuuuuu line length > 80
     putstr(Curses.stdscr, 3, 5, 
@@ -61,8 +67,13 @@ def render_game(win, game)
     ((center.y - half_height)..(center.y + half_height)).each do |y|
       tile = game.dungeon.tile_at(GameName::Point.new(x, y))
       if tile and tile.lit
+        win.color_set(tile.color)
+        symbol = tile.symbol
+      elsif tile.seen
+        win.color_set(2)
         symbol = tile.symbol
       else
+        win.color_set(1)
         symbol = ' '
       end
       putch(win, j, i, symbol)
@@ -73,7 +84,7 @@ def render_game(win, game)
     i += 1
     j = 0
   end
-
+  
   putch(win, half_height, half_width, game.player.symbol)
 
   win.noutrefresh

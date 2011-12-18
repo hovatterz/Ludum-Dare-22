@@ -11,7 +11,7 @@ class GameName
       @radius_sq = radius * radius
 
       # We always see the center
-      @dungeon.tile_at(Point.new(@start_x, @start_y)).lit = true
+      @dungeon.tile_at(Point.new(@start_x, @start_y)).light
 
       # Restrict scan dimensions to map borders and within the radius
       min_extent_x = [@start_x, radius].min
@@ -108,7 +108,7 @@ class GameName
       real_x, real_y = x * dx, y * dy
       coord = [@start_x + real_x, @start_y + real_y]
       coord_point = Point.new(coord[0], coord[1])
-      @dungeon.tile_at(coord_point).lit = true
+      @dungeon.tile_at(coord_point).light
 
       # Don't go beyond circular radius specified
       #if (real_x * real_x + real_y * real_y) > @radius_sq
