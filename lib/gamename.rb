@@ -2,6 +2,7 @@ require 'curses'
 
 class GameName
   attr_reader :dungeon, :player, :turn
+  @@announcements = []
 
   def initialize
     @running = true
@@ -48,6 +49,10 @@ class GameName
   # Returns the center of view
   def view_position
     @player.position
+  end
+
+  def self.announcements
+    @@announcements
   end
 end
 

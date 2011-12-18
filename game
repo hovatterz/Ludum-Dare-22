@@ -37,8 +37,10 @@ def init_screen
   hud_win = Curses.stdscr.subwin(Curses.lines - 2, 20, 
                                  0, Curses.cols - 20)
 
+  msg_win = Curses.stdscr.subwin(2, Curses.cols, Curses.lines - 2, 0)
+
   begin
-    yield game_win, hud_win
+    yield game_win, hud_win, msg_win
   ensure
     game_win.close
     hud_win.close
@@ -83,13 +85,22 @@ def render_hud(win, game)
   win.noutrefresh
 end
 
-init_screen do |game_win, hud_win|
+def render_msg(win, game)
+  win.clear
+
+  putstr(win, 0, 0, GameName.announcements.last)
+
+  win.noutrefresh
+end
+
+init_screen do |game_win, hud_win, msg_win|
   game = GameName.new
   game.generate_dungeon(100, 100, 2)
 
   while game.running?
     render_game(game_win, game)
     render_hud(hud_win, game)
+    render_msg(msg_win, game)
     Curses.refresh
 
     game.handle_input()

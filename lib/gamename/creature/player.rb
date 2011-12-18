@@ -10,6 +10,17 @@ class GameName
       def name
         @name
       end
+
+      def attack(creature)
+        test = super(creature)
+
+        GameName.announcements.push("You attack a #{creature.name} for #{test} damage!")
+      end
+
+      def inflict(who, damage)
+        super(who, damage)
+        GameName.announcements.push("You are hit by a #{who.name} for #{damage} damage!")
+      end
     
       # handles the players turn
       def take_turn(key)
