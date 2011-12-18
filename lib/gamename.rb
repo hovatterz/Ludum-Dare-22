@@ -48,6 +48,10 @@ class GameName
     
     @dungeon.darken
     @fov.calculate(@player.position, 10)
+
+    if turn % 5 == 0 and @player.health < @player.max_health
+      @player.health += 1
+    end
   end
 
   # Returns the center of view

@@ -4,7 +4,8 @@ class GameName
                   'outrageous', 'terrifying', 'daunting', 'delightful',
                    'fabulous', 'disgusting', 'appalling', 'chilling']
 
-    attr_reader :decay, :health, :position
+    attr_accessor :health
+    attr_reader :decay, :max_health, :position
 
     # Initialize with the dungeon and a hitDie string
     def initialize(dungeon, hit_die='1d6', unarmed_damage='1d2')
@@ -13,7 +14,7 @@ class GameName
       @unarmed_damage = unarmed_damage
 
       @position = Point.new
-      @health = RNG.roll(@hit_die)
+      @max_health = @health = RNG.roll(@hit_die)
       @adjective = ADJECTIVES.shuffle.first
       @decay = 0
       @name = 'Shapeless Beast'
