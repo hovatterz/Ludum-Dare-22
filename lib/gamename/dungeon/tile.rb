@@ -2,11 +2,12 @@ class GameName
   class Dungeon
     class Tile < GameName::AStarNode
       attr_accessor :creature, :items, :lit
-      attr_reader :name, :passable, :position, :seen, :transparent
+      attr_reader :name, :passable, :position, :seen, :transparent, :type
 
       # pass a :symbol for type
       def initialize(type, dungeon, position)
         set_type(type)
+        
         @dungeon = dungeon
         @position = position
         @seen = false
@@ -66,6 +67,8 @@ class GameName
 
       # pass a :symbol for type
       def set_type(type)
+        @type = type
+
         case type
         when :wall
           @color = 3
@@ -78,6 +81,18 @@ class GameName
           @name = 'floor'
           @passable = true
           @symbol = '.'
+          @transparent = true
+        when :down_stairs
+          @color = 7
+          @name = 'down stairs'
+          @passable = true
+          @symbol = '>'
+          @transparent = true
+        when :up_stairs
+          @color = 7
+          @name = 'up stairs'
+          @passable = true
+          @symbol = '<'
           @transparent = true
         end
       end

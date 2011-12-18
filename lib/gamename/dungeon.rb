@@ -42,8 +42,28 @@ class GameName
         @floors << floor
       end
 
+      @floors.each_with_index do |floor, i|
+        break if i == @floors.length - 1
+
+        5.times do |x|
+          staircase_placed = false
+          until staircase_placed
+            rand_point = Point.new(Random.rand(1..@width), Random.rand(1..@height))
+            if floor.tile_at(rand_point).type == :floor and @floors[i + 1].tile_at(rand_point).type == :floor
+              floor.tile_at(rand_point).mutate!(:down_stairs)
+              @floors[i + 1].tile_at(rand_point).mutate!(:up_stairs)
+              staircase_placed = true
+            end
+          end
+        end
+      end
+
       @current_floor = @floors.first
       @player.teleport(@current_floor.player_start)
+    end
+
+    def change_floor(modifier)
+      @current_floor = @floors[@floors.index(@current_floor) + modifier]
     end
 
     def creatures

@@ -61,6 +61,21 @@ class GameName
         super(who, damage)
         GameName.announcements.push("You are hit by a #{who.name} for #{damage} damage!")
       end
+
+      def traverse_level
+        tile = @dungeon.tile_at(@position)
+        if tile.type == :up_stairs
+          @dungeon.change_floor(-1)
+          return true
+        end
+
+        if tile.type == :down_stairs
+          @dungeon.change_floor(1)
+          return true
+        end
+
+        false
+      end
     
       # handles the players turn
       def take_turn(key)
@@ -74,6 +89,8 @@ class GameName
         when ?u then return move(Point.new(1, -1))
         when ?b then return move(Point.new(-1, 1))
         when ?n then return move(Point.new(1, 1))
+        when ?> then return traverse_level
+        when ?< then return traverse_level
           # Items
         when ?U then return use_item
         when ?g then return get

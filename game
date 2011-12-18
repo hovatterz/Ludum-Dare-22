@@ -32,6 +32,7 @@ def init_screen
   Curses.init_pair(4, Curses::COLOR_YELLOW,  Curses::COLOR_BLACK)
   Curses.init_pair(5, Curses::COLOR_RED,     Curses::COLOR_BLACK)
   Curses.init_pair(6, Curses::COLOR_GREEN,   Curses::COLOR_BLACK)
+  Curses.init_pair(7, Curses::COLOR_CYAN,    Curses::COLOR_BLACK)
 
   while Curses.cols < MIN_WIDTH or Curses.lines < MIN_HEIGHT
     # fffffuuuuuuuuuuu line length > 80
