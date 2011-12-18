@@ -18,6 +18,8 @@ class GameName
       @decay = 0
       @name = 'Shapeless Beast'
       @symbol = '?'
+      
+      @has_been_seen = false
     end
 
     def alive?
@@ -73,10 +75,14 @@ class GameName
 
     def take_turn(player)
       if alive?
-        if player.position.distance_from(@position) < 15
+        if @has_been_seen or @dungeon.tile_at(@position).lit
           ai_chase(player)
         else
           ai_wander
+        end
+
+        if !@has_been_seen and @dungeon.tile_at(@position).lit
+          @has_been_seen = true
         end
       else
         @decay += 1
