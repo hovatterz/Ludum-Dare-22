@@ -28,8 +28,8 @@ class GameName
         MAX_ROOMS.times do |r|
           w = Random.rand(ROOM_MIN_SIZE..ROOM_MAX_SIZE)
           h = Random.rand(ROOM_MIN_SIZE..ROOM_MAX_SIZE)
-          x = Random.rand(0..(@width - w - 1))
-          y = Random.rand(0..(@height - h - 1))
+          x = Random.rand(1..(@width - w - 2))
+          y = Random.rand(1..(@height - h - 2))
 
           new_room = {}
           new_room[:rect] = Rect.new(x, y, w, h)
