@@ -8,7 +8,7 @@ class GameName
                 'Chris Kirkpatrick']
 
       def initialize(dungeon)
-        super(dungeon, '1d8')
+        super(dungeon, '1d4')
 
         @symbol = 'b'
         @name = NAMES.shuffle.first
