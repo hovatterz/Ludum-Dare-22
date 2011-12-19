@@ -96,16 +96,19 @@ end
 def render_hud(win, game)
   win.clear
 
+  player = game.player
+
   putstr(win, 0, 1, game.player.name)
   putstr(win, 1, 1, "Turn: #{game.turn}")
-  putstr(win, 2, 1, "Health: #{game.player.health}/#{game.player.max_health}")
+  putstr(win, 2, 1, "Health: #{player.health}/#{player.max_health}")
+  putstr(win, 3, 1, "Level: #{player.level} (#{player.experience}/#{player.next_level})")
 
-  inventory = game.player.inventory.items
-  putstr(win, 4, 1, "Inventory (#{inventory.length} items)")
+  inventory = player.inventory.items
+  putstr(win, 5, 1, "Inventory (#{inventory.length} items)")
 
   y = 0
   inventory.each do |key, item|
-    putstr(win, 5 + y, 1, "(#{key}) #{item.name}")
+    putstr(win, 6 + y, 1, "(#{key}) #{item.name}")
     y += 1
   end
 

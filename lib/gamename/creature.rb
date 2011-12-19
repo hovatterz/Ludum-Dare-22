@@ -5,7 +5,7 @@ class GameName
                    'fabulous', 'disgusting', 'appalling', 'chilling']
 
     attr_accessor :health
-    attr_reader :inventory, :max_health, :position
+    attr_reader :exp_yield, :inventory, :max_health, :position
 
     # Initialize with the dungeon and a hitDie string
     def initialize(dungeon, hit_die='1d6', unarmed_damage='1d2')
@@ -13,6 +13,7 @@ class GameName
       @hit_die = hit_die
       @unarmed_damage = unarmed_damage
 
+      @exp_yield = 100
       @position = Point.new
       @max_health = @health = @hit_die.split('d')[1].to_i
       @inventory = GameName::Inventory.new

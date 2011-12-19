@@ -10,6 +10,7 @@ class GameName
       def initialize(dungeon)
         super(dungeon, '1d4')
 
+        @exp_yield = 200
         @symbol = 'b'
         @name = NAMES.shuffle.first
       end

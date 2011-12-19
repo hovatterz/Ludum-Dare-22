@@ -47,6 +47,8 @@ class GameName
       if c.alive?
         c.take_turn(@player)
       else
+        player.award_exp(c.exp_yield)
+
         tile = @dungeon.tile_at(c.position)
         tile.creature = nil
         @dungeon.creatures.delete(c)

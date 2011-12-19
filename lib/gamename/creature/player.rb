@@ -1,15 +1,25 @@
 class GameName
   class Creature
     class Player < Creature
+      attr_reader :experience, :level
+
       def initialize(dungeon)
         super(dungeon, '1d8')
 
+        @experience = 0
+        @level = 1
         @symbol = '@'
         @name = 'Player'
 
         @inventory.add_item(Item::Potion.new)
       end
 
+      def award_exp(xp)
+        @experience += xp
+        tnl = next_level
+        advance_level if @experience >= tnl
+      end
+      
       def get
         items = @dungeon.tile_at(@position).items
         if items.length > 0
@@ -49,6 +59,10 @@ class GameName
 
       def name
         @name
+      end
+
+      def next_level
+        ((level + 1) * 500)
       end
 
       def attack(creature)
@@ -103,6 +117,20 @@ class GameName
       end
 
       private
+
+      def advance_level
+        @level += 1
+        health_up = GameName::RNG.roll(@hit_die)
+        @max_health += health_up
+        @health += (health_up / 2).round
+
+        dmg = @unarmed_damage.split('d')[1].to_i
+        dmg += 2
+        @unarmed_damage = "1d#{dmg}"
+        GameName.announcements.push("You are now level #{@level}!")
+
+        @experience = 0
+      end
 
       def use_item
         key = Curses.getch
