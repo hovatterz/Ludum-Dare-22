@@ -7,18 +7,24 @@ class GameName
           :types => [Creature::BoyBandMember], 
           :range => 2..4 } },
       { :name  => 'Insurance Call Center',
-        :range => 1..4,
+        :range => 1..3,
         :creatures => { 
           :types => [Creature::InsuranceSalesman], 
           :range => 3..5 } },
       { :name  => 'Auto Mechanic Shop',
-        :range => 3..4,
+        :range => 3..3,
         :creatures => { 
           :types => [Creature::Mechanic], 
           :range => 2..3 } },
-      { :name  => 'R\'lyeh',
-        :range => 5..5,
-        :limit => 1 }
+#     { :name => 'Tmp', :range => 1..3 },
+      { :name  => 'Goal',
+        :range => 3..3,
+        :required => true,
+        :limit => 1,
+        :creatures => {
+          :types => [Creature::Kitten],
+          :range => 1 },
+        :win_condition => true }
     ]
 
     attr_reader :height, :width
@@ -38,7 +44,7 @@ class GameName
         end
 
         floor = Floor.new(self, width, height)
-        floor.generate!(room_types)
+        floor.generate!(room_types, i + 1)
         @floors << floor
       end
 
@@ -68,6 +74,10 @@ class GameName
 
     def creatures
       @current_floor.creatures
+    end
+
+    def floor_num
+      @floors.index(@current_floor) + 1
     end
 
     def darken

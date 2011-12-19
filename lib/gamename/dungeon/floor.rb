@@ -17,7 +17,7 @@ class GameName
         @rooms = {}
       end
 
-      def generate!(room_types)
+      def generate!(room_types, floor_num)
         @width.times do |x|
           @height.times do |y|
             @tiles[x][y] = Tile.new(:wall, @dungeon, Point.new(x, y))
@@ -62,27 +62,42 @@ class GameName
             end
             
             until new_room[:type]
-              type = room_types.shuffle.first
+              required = room_types.select {|x| x[:required] }
+              if required and required.length > 0
+                type = required.first
+                room_types[room_types.index(type)][:required] = false
+              else
+                type = room_types.shuffle.first
+              end
+
               length = @rooms.select {|rect, room| room[:type] == type }.length
-              unless type[:limit] and type[:limit] > length
+              unless type[:limit] and type[:limit] <= length
                 new_room[:type] = type
               end
             end
             
-            unless @rooms.empty?
+            unless floor_num == 1 and @rooms.empty?
               if new_room[:type][:creatures]
-                num_creatures = Random.rand(new_room[:type][:creatures][:range])
+                if new_room[:type][:creatures][:range] == 1
+                  num_creatures = 1
+                else
+                  num_creatures = Random.rand(new_room[:type][:creatures][:range])
+                end
                 num_creatures.times do |nc|
                   position = nil
                   until position
-                    rand_pos =  RNG.rand_point_in_rect(new_room[:rect])
+                    rand_pos = RNG.rand_point_in_rect(new_room[:rect])
                     unless @tiles[rand_pos.x][rand_pos.y].creature
                       position = rand_pos
                     end
                   end
-
+                
                   creature = new_room[:type][:creatures][:types].shuffle.first.new(@dungeon)
                   creature.teleport(position)
+
+                  if (creature.class == Creature::Kitten)
+                    room_types[room_types.index(new_room[:type])][:pos] = position
+                  end
 
                   @tiles[position.x][position.y].creature = creature
                   @creatures << creature

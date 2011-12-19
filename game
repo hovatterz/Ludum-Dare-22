@@ -102,6 +102,7 @@ def render_hud(win, game)
   putstr(win, 1, 1, "Turn: #{game.turn}")
   putstr(win, 2, 1, "Health: #{player.health}/#{player.max_health}")
   putstr(win, 3, 1, "Level: #{player.level} (#{player.experience}/#{player.next_level})")
+  putstr(win, 4, 1, "Floor: #{game.dungeon.floor_num}")
 
   inventory = player.inventory.items
   putstr(win, 5, 1, "Inventory (#{inventory.length} items)")
@@ -130,9 +131,29 @@ def render_msg(win, game)
   win.noutrefresh
 end
 
+def render_loss(win)
+  win.clear
+  putstr(win, 0, 0, 'You have died. Press \'q\' to quit...')
+  win.refresh
+  until Curses.getch == ?q; end
+end
+
+def render_win(win)
+  win.clear
+  putstr(win, 0, 0, 'Meow..')
+  putstr(win, 1, 0, 'Press "q" to quit...')
+  win.refresh
+  until Curses.getch == ?q; end
+
+  Curses.stdscr.clear
+  putstr(Curses.stdscr, 1, 0, "You have successfully found your friend - the kitten named 'Billy'.\nHe is, miraculously, in good health. You have won!\n\nPress 'q' to quit.")
+  Curses.refresh
+  until Curses.getch == ?q; end
+end
+
 init_screen do |game_win, hud_win, msg_win|
   game = GameName.new
-  game.generate_dungeon(100, 100, 2)
+  game.generate_dungeon(100, 100, 3)
 
   game.think
   while game.running?
@@ -142,10 +163,12 @@ init_screen do |game_win, hud_win, msg_win|
     Curses.refresh
 
     if game.over?
-      msg_win.clear
-      putstr(msg_win, 0, 0, 'You have died. Press \'q\' to quit...')
-      msg_win.refresh
-      until Curses.getch == ?q; end
+      render_loss(msg_win)
+      break
+    end
+
+    if game.won
+      render_win(msg_win)
       break
     end
 

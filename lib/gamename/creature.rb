@@ -124,5 +124,6 @@ require 'gamename/creature/player'
 require 'gamename/creature/boybandmember'
 require 'gamename/creature/insurancesalesman'
 require 'gamename/creature/mechanic'
+require 'gamename/creature/kitten'
 require 'gamename/creature/boss'
 

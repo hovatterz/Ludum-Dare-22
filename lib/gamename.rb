@@ -1,7 +1,7 @@
 require 'curses'
 
 class GameName
-  attr_reader :dungeon, :fov, :player, :turn
+  attr_reader :dungeon, :fov, :player, :turn, :won
   @@announcements = []
 
   def initialize
@@ -15,6 +15,7 @@ class GameName
     @dungeon.generate!(width, height, floors, @player)
     @fov = FOV.new(@dungeon)
     @over = false
+    @won = false
   end
 
   def handle_input()
@@ -64,6 +65,11 @@ class GameName
 
     if turn % 5 == 0
       @player.heal(1)
+    end
+
+    room = @dungeon.room_at(@player.position)
+    if room and room[:win_condition] and @dungeon.tile_at(room[:pos]).lit
+      @won = true
     end
   end
 
