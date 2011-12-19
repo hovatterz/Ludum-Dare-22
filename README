@@ -1,0 +1,45 @@
+Requirements
+============
+You'll need Ruby 1.9.3 and a terminal that supports colors.
+
+
+Playing
+=======
+Navigate to the directory in your terminal and run
+
+	` ruby ./game `
+
+without quotes. If you're a seasoned Ruby user, you may have a different
+command for running Ruby files. Also, Linux/OS X users may simply
+
+	` chmod +x ./game `
+	` ./game `
+
+This will give the file permission to be run, and the second command runs the
+file. 
+
+
+Controls
+========
+y	-	Northwest
+u	-	Northeast
+h	-	West
+j	-	North
+k	-	South
+l	-	East
+b	-	Southwest
+n	-	Southeast
+>	-	Down stairs
+<	-	Up stairs
+U 	-	Use item, follow up with the key in your inventory
+g	- 	Pick up item
+.	-	Wait a turn
+
+
+Tips
+====
+When you level up your unarmed damage and health go up. Try to avoid insurance
+salesmen at early levels. They're pretty mean.
+
+Good luck!
+
