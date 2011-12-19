@@ -1,3 +1,13 @@
+About
+=====
+Your friend has ventured into a cave without you and is lost and alone! It is
+up to you to save him! Battle through hordes of 90s boy band members, people
+who work in predatory industries, and other horrors of the deep!
+
+Don't read any of the source files if you care about spoilers. This includes 
+the ./game file that runs the game.
+
+
 Requirements
 ============
 You'll need Ruby 1.9.3 and a terminal that supports colors.
